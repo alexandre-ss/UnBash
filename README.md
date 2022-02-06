@@ -14,5 +14,5 @@
 Para usar o UnBash só é necessário o seguinte comando:
 
 ```
-./unbash
+make
 ```
