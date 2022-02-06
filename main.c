@@ -1,5 +1,5 @@
-#include "include.h"
-#include "bash.c"
+#include "helpers/include.h"
+#include "helpers/bash.c"
 
 int main(int argc, char **argv){
     char *buffer;
