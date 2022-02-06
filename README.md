@@ -16,4 +16,4 @@ Para usar o UnBash só é necessário o seguinte comando:
 ```
 make
 ```
-este projeto pode ser encontrado em: https://github.com/alexandre-ss/UnBash
+Este projeto pode ser encontrado em: https://github.com/alexandre-ss/UnBash
