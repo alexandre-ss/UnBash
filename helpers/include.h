@@ -6,13 +6,12 @@
 
 #define SIZE 32
 
-#ifndef VARIABLES
-#define VARIABLES
-char *history[11];
-int history_counter = 0;
-
+#ifndef STACK
+#define STACK
+char history[11][32];
+const int MAXSIZE = 10;
+int top = -1;
 #endif
-
 
 void execute(char *);
 void parse_command(char *, size_t);

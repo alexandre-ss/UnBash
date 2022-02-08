@@ -12,13 +12,12 @@ int main(int argc, char **argv){
         
         command_buffer = (char *) malloc (SIZE * sizeof(char));
         if (command_buffer == NULL) {
-            printf("Unable to allocate command");
+            printf("Não foi possível alocar o comando!\n");
             exit(-1);
         }
 
         command_buffer = read_command_line(command_buffer, SIZE);
         execute(command_buffer);
-        history_stack(command_buffer);
         free(command_buffer);
     }
 

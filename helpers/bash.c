@@ -1,4 +1,6 @@
 #include "include.h"
+#include "history_stack.c"
+
 void iniciar(){
     printf("\033[0;31m");
     printf("#############################################\n");
@@ -39,6 +41,7 @@ void parse_command(char *command, size_t size){
 }
 
 void execute(char *command){
+    push_command(command);
     if(strncmp(command, "ver",3) == 0) printf("UnBash version 1.0.0 (last updated: 07/02/2022) made by: github.com/alexandre-ss\n");
     if(strchr(command, '|')){
         parse_command(command, SIZE);
@@ -46,29 +49,4 @@ void execute(char *command){
     if(strncmp(command, "limpa",5) == 0) system("clear");
     if(strncmp(command, "historico",9) == 0) history_show(command);
     // add other if creating process etc
-}
-
-void history_stack(char *command){
-    printf("%s\n", command);
-    if(history_counter == 9){
-        for(int i = 0; i <= history_counter; i++){
-            history[i] = history[i+1];
-        }
-        history[history_counter] = command;
-    }
-    else {
-        history[history_counter] = command;
-        history_counter++;
-    }
-}
-
-void history_show(char *command){
-    if((strlen(command)-1) == strlen("historico x")){ 
-       execute(history[10]);
-    }
-    else{
-        for(int i = 0; i < history_counter; i++){
-            printf("%s\n", history[i]);
-        }
-    }
 }
