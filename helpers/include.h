@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #define SIZE 32
 
@@ -21,3 +22,4 @@ char* read_command_line(char *, size_t);
 void history_stack(char *);
 void history_show(char *);
 void execute_with_args(char **);
+void separate_args(char *, char **);

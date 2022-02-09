@@ -6,6 +6,10 @@ int main(int argc, char **argv){
     char cwd[PATH_MAX];
     char hostname[HOST_NAME_MAX+1];
 
+    // char buff[1024];
+    // FILE *file = fopen("~/.unbshrc_profile", "r");
+    // printf("%s", fgets(buff, 1024, file));
+
     iniciar();
     while(1) {
         name_and_current_directory(getlogin(), getcwd(cwd, sizeof(cwd)));
@@ -15,12 +19,10 @@ int main(int argc, char **argv){
             printf("Não foi possível alocar o comando!\n");
             exit(-1);
         }
-
         command_buffer = read_command_line(command_buffer, SIZE);
         execute(command_buffer);
         free(command_buffer);
     }
-
+    
     return 0;
 }
-//////////////////////////////////// Retirar ponteiro de ponteiros
