@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 
 #define SIZE 32
 
@@ -19,3 +20,4 @@ void name_and_current_directory(char *, char *);
 char* read_command_line(char *, size_t);
 void history_stack(char *);
 void history_show(char *);
+void execute_with_args(char **);

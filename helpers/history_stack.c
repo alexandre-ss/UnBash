@@ -24,7 +24,7 @@ int push_command(char *command){
 
 
 void history_show(char *command){
-    if((strlen(command)-1) == strlen("historico x")){ 
+    if((strlen(command) == strlen("historico x\n"))){ 
         int index = command[10] - 48;
         if(index >= 0 && index <= 9){
             execute(history[index]);

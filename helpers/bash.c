@@ -26,27 +26,64 @@ void parse_command(char *command, size_t size){
 
     const char delimiter[2] = "|";
     char *parsed_command[size];
-    int i = 0;
+    int i;
 
-    parsed_command[i++] = strtok(command, delimiter);
-    while (command != NULL)
+    for ( i = 0; i < 2; i++)
     {
-        parsed_command[i++] = strtok(NULL, delimiter);
-    }  
-
-    i = 0;
-    while (parsed_command[i] != NULL){
-        execute(parsed_command[i++]);
+        parsed_command[i] = strsep(&command, delimiter);
+        if(parsed_command == NULL) break;
     }
+    //// Após o parse do pipe, executar o comando. sugestao: criar func
+
 }
 
 void execute(char *command){
     push_command(command);
-    if(strncmp(command, "ver",3) == 0) printf("UnBash version 1.0.0 (last updated: 07/02/2022) made by: github.com/alexandre-ss\n");
+    char *parsed_command[SIZE];
+    /*
+    char *teste[2] = {"free"};
+    execute_with_args(teste);
+    */
+
     if(strchr(command, '|')){
         parse_command(command, SIZE);
     }
-    if(strncmp(command, "limpa",5) == 0) system("clear");
-    if(strncmp(command, "historico",9) == 0) history_show(command);
-    // add other if creating process etc
+    else if(strcmp(command, "ver\n") == 0){
+        printf("UnBash version 1.0.0 (last updated: 07/02/2022) made by: github.com/alexandre-ss\n");
+    }   
+    else if(strcmp(command, "limpa\n") == 0){ 
+        system("clear");
+    }
+    else if(strncmp(command, "historico", 9) == 0){
+        history_show(command);
+    }
+    else if(strcmp(command, "sair\n") == 0){
+        exit(EXIT_SUCCESS);
+    }
+    else{
+        int i;
+        command[strcspn(command, "\n")] = 0;
+        for ( i = 0; i < SIZE; i++){
+            parsed_command[i] = strsep(&command, " ");
+            if(parsed_command[i] == NULL) break;
+            if(strlen(parsed_command[i]) == 0) i--;
+        }
+        execute_with_args(parsed_command);
+        
+    }
+}
+
+void execute_with_args(char *command[]){
+    pid_t pid = fork();
+
+    if(pid < 0){
+        printf("Erro ao criar processo filho!\n");
+        return;
+    }
+    else if(pid == 0){
+        if(execvp(command[0], command) < 0) printf("Erro ao executar comando!\n");
+    } //child process
+    else {
+        int rc_wait = wait(NULL);
+    }
 }
