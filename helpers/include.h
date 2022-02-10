@@ -23,3 +23,4 @@ void history_stack(char *);
 void history_show(char *);
 void execute_with_args(char **);
 void separate_args(char *, char **);
+void execute_pipe(char **, char **);

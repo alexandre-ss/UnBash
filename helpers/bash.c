@@ -22,21 +22,6 @@ void name_and_current_directory(char *name, char *directory){
     printf("\033[0m");
 }
 
-void parse_command(char *command, size_t size){
-
-    const char delimiter[2] = "|";
-    char *parsed_command[size];
-    int i;
-
-    for ( i = 0; i < 2; i++)
-    {
-        parsed_command[i] = strsep(&command, delimiter);
-        if(parsed_command == NULL) break;
-    }
-    //// Após o parse do pipe, executar o comando. sugestao: criar func
-
-}
-
 void execute(char *command){
     push_command(command);
     char *parsed_command[SIZE];
@@ -44,7 +29,7 @@ void execute(char *command){
     if(strchr(command, '|')){
         parse_command(command, SIZE);
     }
-    if(strcmp(command, "sair\n") == 0){
+    else if(strcmp(command, "sair\n") == 0){
         exit(EXIT_SUCCESS);
     }
     else if(strcmp(command, "ver\n") == 0){
@@ -75,9 +60,10 @@ void execute_with_args(char *command[]){
     }
     else if(pid == 0){
         if(execvp(command[0], command) < 0) printf("Erro ao executar comando!\n");
+        exit(0);
     } //child process
     else {
-        int rc_wait = wait(NULL);
+        wait(NULL);
     }
 }
 
@@ -91,3 +77,75 @@ void separate_args(char *command, char *parsed_command[]){
         if(strlen(parsed_command[i]) == 0) i--;
     }
 }
+
+void parse_command(char *command, size_t size){
+
+    const char delimiter[2] = "|";
+    char *parsed_command[2], *command1[size], *command2[size];
+    int i, aux;
+
+    command[strcspn(command, "\n")] = 0;
+    for ( i = 0; i < 2; i++)
+    {
+        parsed_command[i] = strsep(&command, delimiter);
+        if(parsed_command == NULL) break;
+
+        for (int j = 0; j < SIZE; j++){
+            switch (i){
+                case 0:
+                    command1[j] = strsep(&parsed_command[i], " ");
+                    if(command1[j] == NULL) break;
+                    if(strlen(command1[j]) == 0) j--;
+                    break;
+                case 1:
+                    command2[j] = strsep(&parsed_command[i], " ");
+                    if(command2[j] == NULL) break;
+                    if(strlen(command2[j]) == 0) j--;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    execute_pipe(command1, command2);    
+}
+
+void execute_pipe(char **command1, char **command2){
+    int fd[2];
+    pid_t pid1, pid2;
+
+    pipe(fd);
+    if((pid1 = fork()) == 0){
+        close(1);
+        dup(fd[1]);
+        close(fd[0]);
+        close(fd[1]);
+        if(execvp(command1[0], command1) < 0){
+            printf("Erro ao executar comando!\n");
+            exit(0);
+        }
+    }
+    if((pid2 = fork()) == 0){
+        close(0);
+        dup(fd[0]);
+        close(fd[0]);
+        close(fd[1]);
+        if(execvp(command2[0], command2) < 0){
+            printf("Erro ao executar comando!\n");
+            exit(0);
+        }
+    }
+    close(fd[0]);
+    close(fd[1]);
+    waitpid(pid1, NULL, 0);
+    waitpid(pid2, NULL, 0);
+
+}
+
+/*
+configurar unbshrc
+fazer pipe funcionar
+comandos em background
+redirecionar comandos
+processamento de programa em lote
+*/
