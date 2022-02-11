@@ -1,19 +1,22 @@
 #include "helpers/include.h"
 #include "helpers/bash.c"
 
+/*
+Missing:
+configurar unbshrc
+redirecionar comandos
+processamento de programa em lote
+*/
+
 int main(int argc, char **argv){
     char *command_buffer;
     char cwd[PATH_MAX];
     char hostname[HOST_NAME_MAX+1];
 
-    // char buff[1024];
-    // FILE *file = fopen("~/.unbshrc_profile", "r");
-    // printf("%s", fgets(buff, 1024, file));
-
     iniciar();
     while(1) {
         name_and_current_directory(getlogin(), getcwd(cwd, sizeof(cwd)));
-        
+
         command_buffer = (char *) malloc (SIZE * sizeof(char));
         if (command_buffer == NULL) {
             printf("Não foi possível alocar o comando!\n");

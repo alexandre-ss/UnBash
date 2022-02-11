@@ -4,6 +4,11 @@
 
 > Este procura simular um bash de forma a torná-lo amigável para usuários falantes do português, assim, todos comandos já conhecidos em sistemas UNIX foram traduzidos para PT-BR.
 
+## Faltas: 
+- configurar unbshrc
+- redirecionar comandos
+- processamento de programa em lote
+
 ## 💻 Pré-requisitos
 
 * Sistema UNIX 64b
@@ -14,6 +19,6 @@
 Para usar o UnBash só é necessário o seguinte comando:
 
 ```
-make
+make unbash
 ```
 Este projeto pode ser encontrado em: https://github.com/alexandre-ss/UnBash

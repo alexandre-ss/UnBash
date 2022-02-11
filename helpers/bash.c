@@ -157,9 +157,3 @@ int is_background(char *command){
     bg = command[len-1] == '&' ? 1 : 0;
     return bg;
 }
-
-/*
-configurar unbshrc
-redirecionar comandos
-processamento de programa em lote
-*/
