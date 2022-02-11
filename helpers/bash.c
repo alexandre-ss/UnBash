@@ -1,6 +1,6 @@
 #include "include.h"
 #include "history_stack.c"
-
+int bg = 0, bg_process_number = 0;
 void iniciar(){
     printf("\033[0;31m");
     printf("#############################################\n");
@@ -25,17 +25,18 @@ void name_and_current_directory(char *name, char *directory){
 void execute(char *command){
     push_command(command);
     char *parsed_command[SIZE];
+    command[strcspn(command, "\n")] = 0;
 
     if(strchr(command, '|')){
         parse_command(command, SIZE);
     }
-    else if(strcmp(command, "sair\n") == 0){
+    else if(strcmp(command, "sair") == 0){
         exit(EXIT_SUCCESS);
     }
-    else if(strcmp(command, "ver\n") == 0){
+    else if(strcmp(command, "ver") == 0){
         printf("UnBash version 1.0.0 (last updated: 07/02/2022) made by: github.com/alexandre-ss\n");
     }   
-    else if(strcmp(command, "limpa\n") == 0){ 
+    else if(strcmp(command, "limpa") == 0){ 
         system("clear");
     }
     else if(strncmp(command, "historico", 9) == 0){
@@ -53,6 +54,8 @@ void execute(char *command){
 
 void execute_with_args(char *command[]){
     pid_t pid = fork();
+    pid_t pid1;
+    int status;
 
     if(pid < 0){
         printf("Erro ao criar processo filho!\n");
@@ -62,15 +65,24 @@ void execute_with_args(char *command[]){
         if(execvp(command[0], command) < 0) printf("Erro ao executar comando!\n");
         exit(0);
     } //child process
-    else {
-        wait(NULL);
+    else if(!bg){         
+        waitpid(pid, &status, 0);
+        signal(SIGCHLD, SIG_IGN);
     }
+    else {
+        printf("Processo em background [%d] iniciado\n", bg_process_number++);
+        waitpid(pid, &status, WNOHANG);
+        printf("finished");
+    }
+
 }
 
 void separate_args(char *command, char *parsed_command[]){
     int i;
+    if(is_background(command)){
+        command[strcspn(command, "&")] = 0;
+    }
 
-    command[strcspn(command, "\n")] = 0;
     for ( i = 0; i < SIZE; i++){
         parsed_command[i] = strsep(&command, " ");
         if(parsed_command[i] == NULL) break;
@@ -84,7 +96,6 @@ void parse_command(char *command, size_t size){
     char *parsed_command[2], *command1[size], *command2[size];
     int i, aux;
 
-    command[strcspn(command, "\n")] = 0;
     for ( i = 0; i < 2; i++)
     {
         parsed_command[i] = strsep(&command, delimiter);
@@ -142,10 +153,14 @@ void execute_pipe(char **command1, char **command2){
 
 }
 
+int is_background(char *command){
+    int len = strlen(command);
+    bg = command[len-1] == '&' ? 1 : 0;
+    return bg;
+}
+
 /*
 configurar unbshrc
-fazer pipe funcionar
-comandos em background
 redirecionar comandos
 processamento de programa em lote
 */

@@ -24,3 +24,5 @@ void history_show(char *);
 void execute_with_args(char **);
 void separate_args(char *, char **);
 void execute_pipe(char **, char **);
+int is_background(char *);
+void execute_background_cmd(char *);
