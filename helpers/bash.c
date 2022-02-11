@@ -72,7 +72,6 @@ void execute_with_args(char *command[]){
     else {
         printf("Processo em background [%d] iniciado\n", bg_process_number++);
         waitpid(pid, &status, WNOHANG);
-        printf("finished");
     }
 
 }
