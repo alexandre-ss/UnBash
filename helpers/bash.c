@@ -34,7 +34,7 @@ void execute(char *command){
         exit(EXIT_SUCCESS);
     }
     else if(strcmp(command, "ver") == 0){
-        printf("UnBash version 1.0.0 (last updated: 07/02/2022) made by: github.com/alexandre-ss\n");
+        printf("UnBash version 1.0.0 (last updated: 11/02/2022) made by: github.com/alexandre-ss\n");
     }   
     else if(strcmp(command, "limpa") == 0){ 
         system("clear");
@@ -62,12 +62,12 @@ void execute_with_args(char *command[]){
         return;
     }
     else if(pid == 0){
-        if(execvp(command[0], command) < 0) printf("Erro ao executar comando!\n");
+        if(execvp(command[0], command) < 0) printf("Comando desconhecido!\n");
         exit(0);
     } //child process
-    else if(!bg){         
+    else if(!bg){  
+        signal(SIGCHLD, SIG_IGN); //matar background process quando terminar(evitar zombie)      
         waitpid(pid, &status, 0);
-        signal(SIGCHLD, SIG_IGN);
     }
     else {
         printf("Processo em background [%d] iniciado\n", bg_process_number++);
